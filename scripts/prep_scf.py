@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     pot_dir = "/Users/gweng/codes/vasp/potpaw_PBE"
     if not os.path.isdir(pot_dir):
-        print(f"ERROR: POTCAR_DIR does not exist: '{POTCAR_DIR}'. Set the correct path.")
+        print(f"ERROR: POTCAR_DIR does not exist: '{pot_dir}'. Set the correct path.")
         sys.exit(1)
 
     #prepare vasp_dir
