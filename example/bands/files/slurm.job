@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -A abc123
+#SBATCH -C cpu
+#SBATCH --qos=regular
+#SBATCH --time=24:00:00
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=64
+#SBATCH -J sample_r1
+#SBATCH -o out
+#SBATCH -e err
+
+module load vasp/6.4.3-cpu
+
+export OMP_NUM_THREADS=1
+
+srun -n 256 -c 2 --cpu-bind=cores vasp_std

@@ -1,0 +1,41 @@
+#system description
+SYSTEM = 'relax'
+NWRITE = 2
+ISTART = 0
+ICHARG = 2
+LWAVE= .FALSE.
+LCHARG = .FALSE.
+LREAL = AUTO
+LORBIT = 0
+ISYM = 2
+#electron scf
+ALGO = Normal
+AMIN = 0.01
+ENCUT = 500
+PREC = Normal
+ISMEAR = 0
+SIGMA = 0.1
+ISPIN = 1
+NELM = 500
+EDIFF = 1E-7
+GGA = PE
+LASPH = .TRUE.
+#spin-orbit
+LSORBIT = .FALSE.
+MAGMOM = 100*0.0
+#energy-correction
+IVDW = 20
+LDIPOL = .FALSE.
+IDIPOL = -1
+#ionic relaxation and optimization
+IBRION = 1
+EDIFFG = 5E-3
+NSW = 100
+ISIF = 2
+NFREE = 1
+POTIM = 0.5
+#parallelization related
+KPAR = 4
+NPAR = 8
+NCORE = 1
+NSIM = 4

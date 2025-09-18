@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+.env
+.ipynb_checkpoints/
+.DS_Store
+
+# VASP runs (if you keep examples)
+*.OUTCAR
+*.OSZICAR
+*.CHG*
+*.WAVECAR
+*.EIGENVAL
+*.DOSCAR
+*.PROCAR
+*.vasp.backup
