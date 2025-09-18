@@ -9,6 +9,46 @@ def read_pos(pos_file):
     atoms = read(pos_file, format="vasp")
     return atoms
 
+def keep_topn(atoms: Atoms, n: int, *, use_scaled: bool = False) -> Atoms:
+    """
+    Return a new Atoms object containing only the top N atoms by z.
+
+    Parameters
+    ----------
+    atoms : ase.Atoms
+        Input structure.
+    n : int
+        Number of atoms to keep (highest z). If n <= 0, returns empty Atoms.
+        If n >= len(atoms), returns a copy of the original.
+    use_scaled : bool
+        If True, rank by fractional z (useful if the slab wraps across the cell).
+        Otherwise, rank by Cartesian z.
+
+    Returns
+    -------
+    ase.Atoms
+        Subset with the top N atoms, preserving original order.
+    """
+    total = len(atoms)
+    if n <= 0:
+        return Atoms(cell=atoms.get_cell(), pbc=atoms.get_pbc())
+    if n >= total:
+        sub = atoms.copy()
+        sub.set_cell(atoms.get_cell())
+        sub.set_pbc(atoms.get_pbc())
+        return sub
+
+    z = atoms.get_scaled_positions()[:, 2] if use_scaled else atoms.positions[:, 2]
+    order = np.argsort(z)              # low -> high
+    top_idx = order[-n:]               # indices of top N (unsorted)
+    # preserve the original input order, like your rem_at_z does
+    top_idx = np.sort(top_idx)
+
+    sub = atoms[top_idx]               # slicing keeps arrays/constraints per-atom
+    sub.set_cell(atoms.get_cell())     # ensure same cell/pbc
+    sub.set_pbc(atoms.get_pbc())
+    return sub
+
 def rem_at_z(atoms, z_mirror, tol=1e-6):
     """
     Returns a new Atoms object that includes only those atoms with

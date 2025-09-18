@@ -166,14 +166,14 @@ NSIM = 4
 """
     return content
 
-def incar_solv(*, lsol=".TRUE.", eb_k="78.4", tau="0.0", lambda_k="3.0", sig_k="0.4", lrhoion=".FALSE.", nelec="0"):
+def incar_solv(*, lsol=".TRUE.", eb_k="78.4", tau="0.0", lambda_k="3.0", sig_k="0.4", lrhoion=".FALSE."):
     content = f"""
+#VASPSOL
 LSOL    = {lsol}
 EB_K    = {eb_k}
 TAU     = {tau}
 LRHOION = {lrhoion}
 LAMBDA_D_K = {lambda_k}
 SIGMA_K    = {sig_k}
-NELECT = {nelec}
 """
     return content
