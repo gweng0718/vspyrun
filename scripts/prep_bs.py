@@ -44,11 +44,22 @@ from vspyrun import write_file
 
 def main(inpos_file, inkpts_file, run_dir, pot_dir):
 
-    # (1) Preparing INCAR
+    # (1) POSCAR: read, add vacuum, center, apply selective dynamics, write out
+    atoms = read_pos(inpos_file)
+    atoms = add_vacuum(atoms, vacuum)
+    atoms = center_atoms(atoms)
+    atoms = apply_sd(atoms, n_bot, n_top)
+    outpos_file = os.path.join(run_dir, "POSCAR")
+    write_pos_cart(atoms, outpos_file)
+    nat = len(atoms)
+    ndim = 3*nat
+    MAGMOM = f"{ndim}*0.0"
+
+    # (2) Preparing INCAR
     incar_text = join_incar_blocks(
         incar_sys_bs(lwave=LWAVE),
         incar_elec(algo=ALGO, amin=AMIN, encut=ENCUT, prec=PREC, sigma=SIGMA, ispin=ISPIN, xcf=XCF),
-        incar_soc(lsoc=LSORBIT),                 # FIX: add missing commas
+        incar_soc(lsoc=LSORBIT,magmom=MAGMOM),                 # FIX: add missing commas
         incar_ecorr(ivdw=IVDW),
         incar_geo(ibrion=IBRION, nsw=NSW),
         incar_para(kpar=KPAR, npar=NPAR, ncore=NCORE),
@@ -57,17 +68,9 @@ def main(inpos_file, inkpts_file, run_dir, pot_dir):
     incar_file = os.path.join(run_dir, "INCAR")
     write_file(incar_file, incar_text)
 
-    # (2) KPOINTS: copy from preexisting files
+    # (3) KPOINTS: copy from preexisting files
     kpts_file = os.path.join(run_dir, "KPOINTS")
     shutil.copy(inkpts_file, kpts_file)
-
-    # (3) POSCAR: read, add vacuum, center, apply selective dynamics, write out
-    atoms = read_pos(inpos_file)
-    atoms = add_vacuum(atoms, vacuum)
-    atoms = center_atoms(atoms)
-    atoms = apply_sd(atoms, n_bot, n_top)
-    outpos_file = os.path.join(run_dir, "POSCAR")
-    write_pos_cart(atoms, outpos_file)
 
     # (4) POTCAR: assembled from element folders under POTCAR_DIR
     outpot_file = os.path.join(run_dir, "POTCAR")

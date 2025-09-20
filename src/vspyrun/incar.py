@@ -64,7 +64,7 @@ def append_unique_line(filepath: str, line: str) -> bool:
         f.write(line.rstrip("\n") + "\n")
     return True
 
-def incar_sys_scf(*, icharg="2", lcharg=".TRUE."):
+def incar_sys_scf(*, icharg="2", lcharg=".TRUE.", lreal="AUTO"):
     content = f"""
 #system description
 SYSTEM = 'scf'
@@ -73,13 +73,13 @@ ISTART = 0
 ICHARG = {icharg}
 LWAVE= .FALSE.
 LCHARG = {lcharg}
-LREAL = AUTO
+LREAL = {lreal}
 LORBIT = 0
 ISYM = 2
 """
     return content
 
-def incar_sys_bs(*, lwave=".FALSE."):
+def incar_sys_bs(*, lwave=".FALSE.", lreal="AUTO"):
     content = f"""
 #system description
 SYSTEM = 'bands'
@@ -88,14 +88,14 @@ ISTART = 0
 ICHARG = 11
 LWAVE= {lwave}
 LCHARG = .FALSE.
-LREAL = AUTO
+LREAL = {lreal}
 LORBIT = 11
 ISYM = 0
 """
 
     return content
 
-def incar_sys_rel():
+def incar_sys_rel(*, lreal="AUTO"):
     content = f"""
 #system description
 SYSTEM = 'relax'
@@ -104,7 +104,7 @@ ISTART = 0
 ICHARG = 2
 LWAVE= .FALSE.
 LCHARG = .FALSE.
-LREAL = AUTO
+LREAL = {lreal}
 LORBIT = 0
 ISYM = 2
 """
