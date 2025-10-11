@@ -149,6 +149,8 @@ def build_mir_sym(atoms, z_mir, tol=0.1):
             Atom(symbol=atom.symbol, position=(x_new, y_new, z_new))
         )
 
+    mir_atoms = atoms + mir_atoms
+
     return mir_atoms
 
 def build_inver_sym(atoms, inv_center, tol_overlap=1e-3):
