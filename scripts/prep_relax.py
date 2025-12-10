@@ -7,7 +7,6 @@ import os
 import sys
 
 # --- CONFIG ------------------------------------------------------------
-POTCAR_DIR = "/Users/gweng/codes/vasp/potpaw_PBE"
 
 # INCAR (electronic settings) — keep as strings to match your function signatures
 # electron scf
@@ -25,21 +24,21 @@ IVDW   = "20"
 LDIPOL = ".FALSE."
 IDIPOL = "-1"
 # ionic relaxation and optimization
-IBRION = "1"
+IBRION = "2"
 NSW    = "100"
 EDIFFG = "5E-3"
 ISIF   = 2
 # parallelization (GPU)
-KPAR   = "4"
+KPAR   = "16"
 NPAR   = "8"
-NCORE  = "1"
+NCORE  = "2"
 # POSCAR ops
-vacuum = 15.0
-n_top  = 8
-n_bot  = 8
+vacuum = 30.0
+n_top  = 18
+n_bot  = 18
 # KPOINTS
 K_CENTER = "Gamma"   # "Gamma" or "Monkhorst-Pack"
-K_MESH   = (8, 8, 8) # k-point mesh for SCF
+K_MESH   = (6, 6, 1) # k-point mesh for SCF
 # ----------------------------------------------------------------------
 
 # Import from your package
@@ -89,7 +88,7 @@ def main(inpos_file, run_dir, pot_dir):
 
 if __name__ == "__main__":
 
-    pot_dir = "/Users/gweng/codes/vasp/potpaw_PBE"
+    pot_dir = "/global/homes/g/gweng23/codes/VASP/pseudo/potpaw_PBE"
     if not os.path.isdir(pot_dir):
         print(f"ERROR: POTCAR_DIR does not exist: '{pot_dir}'. Set the correct path.")
         sys.exit(1)
@@ -97,21 +96,24 @@ if __name__ == "__main__":
     #prepare vasp_dir
     base_dir = os.getcwd()
     file_dir = os.path.join(base_dir, "files")
-    inpos_file = os.path.join(file_dir, "input.vasp")
-    if not os.path.isfile(inpos_file):
-        print(f"ERROR: INPUT POSCAR not found at '{inpos_file}'. Set input path at top of this script.")
-        sys.exit(1)
+    struc_dir = os.path.join(file_dir, "input_struc")
 
-    run_dir = os.path.join(base_dir, "test")
-    os.makedirs(run_dir, exist_ok=True)
-    main(inpos_file, run_dir, pot_dir)
+    for i in range(2,3):
+        inpos_file = os.path.join(struc_dir, f"r{i}.vasp")
+        if not os.path.isfile(inpos_file):
+            print(f"ERROR: INPUT POSCAR not found at '{inpos_file}'. Set input path at top of this script.")
+            sys.exit(1)
 
-    #submit jobs
-    from vspyrun import prep_slurm
-    template = os.path.join(file_dir, "slurm.job")
-    jname = "test"
-    outslurm = os.path.join(run_dir, "slrum.job")
-    prep_slurm(template, jname, outslurm)
-    os.chdir(run_dir)
-    #subprocess.run(['sbatch', 'slurm.job'])
-    print(f"Successfully submit vasp job in {run_dir}!", flush=True)
+        run_dir = os.path.join(base_dir, f"run{i+4}", "files")
+        os.makedirs(run_dir, exist_ok=True)
+        main(inpos_file, run_dir, pot_dir)
+
+        #submit jobs
+        from vspyrun import prep_slurm
+        template = os.path.join(file_dir, "slurm.job")
+        jname = "sample_r1"
+        outslurm = os.path.join(run_dir, "slurm.job")
+        prep_slurm(template, jname, outslurm)
+        os.chdir(run_dir)
+        #subprocess.run(['sbatch', 'slurm.job'])
+        print(f"Successfully submit vasp job in {run_dir}!", flush=True)

@@ -189,7 +189,7 @@ def build_inver_sym(atoms, inv_center, tol_overlap=1e-3):
     for idx in sorted(to_delete, reverse=True):
         del new_atoms[idx]
 
-    return new_atoms
+    return new_atoms+atoms
 
 def rep_lat_para(atoms1,atoms2):
     """
@@ -276,4 +276,10 @@ def write_pos_direct(atoms,outpos):
     """
     write(outpos, atoms, format='vasp', sort=True, vasp6=True, direct=True)
 
+def build_sc(atoms,nx,ny,nz):
+    """
+    write poscar to a specific file in direct coordinates
+    """
+    supercell = atoms.repeat((nx,ny,nz))
+    return supercell
 # Backwards-compatible alias with corrected spelling

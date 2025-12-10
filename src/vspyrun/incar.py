@@ -95,7 +95,7 @@ ISYM = 0
 
     return content
 
-def incar_sys_rel(*, lreal="AUTO"):
+def incar_sys_rel(*, lreal="AUTO", lcharg=".FALSE."):
     content = f"""
 #system description
 SYSTEM = 'relax'
@@ -103,7 +103,7 @@ NWRITE = 2
 ISTART = 0
 ICHARG = 2
 LWAVE= .FALSE.
-LCHARG = .FALSE.
+LCHARG = {lcharg}
 LREAL = {lreal}
 LORBIT = 0
 ISYM = 2
@@ -166,7 +166,7 @@ NSIM = 4
 """
     return content
 
-def incar_solv(*, lsol=".TRUE.", eb_k="78.4", tau="0.0", lambda_k="3.0", sig_k="0.4", lrhoion=".FALSE."):
+def incar_solv(*, lsol=".TRUE.", eb_k="78.4", tau="0.0", lambda_k="3.0", sig_k="0.4", lrhoion=".FALSE.", nelect=1E-6):
     content = f"""
 #VASPSOL
 LSOL    = {lsol}
@@ -175,5 +175,9 @@ TAU     = {tau}
 LRHOION = {lrhoion}
 LAMBDA_D_K = {lambda_k}
 SIGMA_K    = {sig_k}
+"""
+    if nelect > 1:
+        content += f"""
+NELECT = {nelect}
 """
     return content
