@@ -64,6 +64,21 @@ def append_unique_line(filepath: str, line: str) -> bool:
         f.write(line.rstrip("\n") + "\n")
     return True
 
+def incar_sys(*,system="Default", nwrite="1",istart="0",icharg="2",lwave=".FALSE.",lcharg=".TRUE.",lreal="AUTO",lorbit="0",isym="2"):
+    content = f"""
+#system description
+SYSTEM = {system}
+NWRITE = {nwrite}
+ISTART = {istart}
+ICHARG = {icharg}
+LWAVE= {lwave}
+LCHARG = {lcharg}
+LREAL = {lreal}
+LORBIT = {lorbit}
+ISYM = {isym}
+"""
+    return content
+
 def incar_sys_scf(*, icharg="2", lcharg=".TRUE.", lreal="AUTO"):
     content = f"""
 #system description
