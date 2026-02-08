@@ -64,7 +64,7 @@ def append_unique_line(filepath: str, line: str) -> bool:
         f.write(line.rstrip("\n") + "\n")
     return True
 
-def incar_sys(*,system="Default", nwrite="1",istart="0",icharg="2",lwave=".FALSE.",lcharg=".TRUE.",lreal="AUTO",lorbit="0",isym="2"):
+def incar_sys(*,system="Default", nwrite="1",istart="0",icharg="2",lwave=".FALSE.",lcharg=".TRUE.",lreal="AUTO",lorbit="0",isym="2",laechg=".FALSE."):
     content = f"""
 #system description
 SYSTEM = {system}
@@ -76,6 +76,7 @@ LCHARG = {lcharg}
 LREAL = {lreal}
 LORBIT = {lorbit}
 ISYM = {isym}
+LAECHG = {laechg}
 """
     return content
 
@@ -125,7 +126,7 @@ ISYM = 2
 """
     return content
 
-def incar_elec(*, algo="Normal", amin="0.1", encut="500", prec="Accurate", sigma="0.1", ispin="1", xcf="PE"):
+def incar_elec(*, algo="Normal", amin="0.1", encut="500", prec="Accurate", sigma="0.1", ispin="1", xcf="PE", lkillscf=".TRUE.", lkilldens=".TRUE.",nelm="500"):
     content = f"""
 #electron scf
 ALGO = {algo}
@@ -135,10 +136,12 @@ PREC = {prec}
 ISMEAR = 0
 SIGMA = {sigma}
 ISPIN = {ispin}
-NELM = 500
+NELM = {nelm}
 EDIFF = 1E-7
 GGA = {xcf}
 LASPH = .TRUE.
+LKILLSCF = {lkillscf}
+LKILLDENS = {lkilldens}
 """
     return content
 
